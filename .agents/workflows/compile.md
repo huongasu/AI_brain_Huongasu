@@ -41,6 +41,7 @@ Cho mỗi tài liệu raw/ chưa biên dịch, **phân loại trước**:
 | Diagram/Image | `raw/misc/` + ảnh | Bóc tách layers, components, flows |
 | Video/Transcript | `raw/videos/` | Tìm key moments, quotes, bỏ filler |
 | Repo/Code | `raw/repos/` | Extract architecture, patterns, API surface |
+| **Quy chế/Chính sách nội bộ** ⭐ | `raw/misc/` (nguồn từ nơi từng làm) | **Áp dụng Quy Tắc Ẩn Danh trong AGENTS.md TRƯỚC KHI extract** — che tên công ty/người/số liệu định danh, giữ lại logic và bài học |
 
 ### 4. Phân tích nội dung theo strategy
 
@@ -49,8 +50,9 @@ Cho mỗi tài liệu (đã classify):
 1. **Đọc toàn bộ nội dung**
 2. **Xác định các thực thể:**
    - **Concepts** (khái niệm) → `wiki/concepts/`
-   - **Tools** (công cụ, sản phẩm) → `wiki/tools/`
-   - **People** (nhân vật đáng chú ý) → `wiki/people/`
+   - **Frameworks** (framework/mô hình nhân sự — VD: ASK, 9-Box Grid, Balanced Scorecard) → `wiki/frameworks/`
+   - **Case Study** (tình huống thực tế đã triển khai — nhớ áp dụng Quy Tắc Ẩn Danh nếu nguồn là quy chế nơi từng làm) → `wiki/casestudy/`
+   - **Lessons** (bài học/kinh nghiệm rút ra, không gắn với 1 tình huống cụ thể) → `wiki/lessons/`
    - **Comparisons** (so sánh A vs B) → `wiki/comparisons/`
 
 3. **Cho mỗi thực thể — áp dụng Concrete Noun Test:**
@@ -101,7 +103,7 @@ Khi bài wiki **đã tồn tại** và raw mới chứa thông tin về cùng ch
 
 ### 6. Viết bài wiki mới (nếu có)
 
-Dùng **Entity-Type Template** phù hợp (xem AGENTS.md → Entity-Type Templates):
+Dùng **Entity-Type Template** phù hợp (xem AGENTS.md → Entity-Type Templates: Concept, Framework, Case Study, Lessons, Comparison):
 
 Mỗi bài wiki phải tuân thủ:
 
@@ -119,6 +121,8 @@ summary: "Tóm tắt 1 dòng cho _index.md"
 ---
 ```
 
+**Nếu bài thuộc `wiki/casestudy/` và nguồn là quy chế/chính sách nơi từng làm:** thêm dòng đầu nội dung `> [!info] Nguồn đã được ẩn danh hóa theo quy tắc bảo mật.` (xem AGENTS.md → Quy Tắc Ẩn Danh).
+
 **Quy tắc nội dung:**
 - Tối thiểu 200 từ cho concept articles
 - Sử dụng `[[wikilinks]]` cho internal links
@@ -130,7 +134,7 @@ summary: "Tóm tắt 1 dòng cho _index.md"
 **Quy tắc giọng văn (Bách Khoa Toàn Thư):**
 - Viết giọng trung lập, dẫn chứng cụ thể. Không phải blog.
 - 1 ý = 1 câu. Câu ngắn. Viết đoạn văn thay vì bullet-point (trừ khi liệt kê).
-- Attribution thay vì assertion: "Karpathy mô tả..." thay vì "Nó rất..."
+- Attribution thay vì assertion: "Tài liệu KNL mô tả..." thay vì "Nó rất..."
 - Cảm xúc truyền qua direct quotes từ raw source, không qua lời viết.
 
 ### 7. Cập nhật backlinks
@@ -141,7 +145,7 @@ Kiểm tra toàn bộ bài wiki hiện có. Nếu bài mới đề cập đến 
 
 // turbo
 Thêm entry cho mỗi bài wiki mới vào `wiki/_index.md`:
-- Đúng section (Concepts / Tools / People / Comparisons)
+- Đúng section (Concepts / Frameworks / Case Study / Lessons / Comparisons)
 - Cập nhật tổng số bài
 - Cập nhật ngày cập nhật
 - Thêm source mới vào bảng Raw Sources
@@ -186,7 +190,7 @@ Append vào `wiki/_ops_log.md`:
 
 ### Bài wiki mới:
 - [[concept-1]] — tóm tắt
-- [[tool-1]] — tóm tắt
+- [[framework-1]] — tóm tắt
 
 ### Bài wiki đã cập nhật:
 - [[existing-article]] — thêm [nội dung gì]
@@ -235,6 +239,7 @@ Log kết quả index.
 6. **Tiếng Việt & English** — Nội dung tiếng Việt, thuật ngữ kỹ thuật giữ nguyên tiếng Anh
 7. **RE-READ trước khi update** — Đọc lại toàn bộ bài trước khi sửa bất kỳ dòng nào
 8. **Integrate, không append** — Tích hợp vào mạch viết, không đổ thêm ở cuối
+9. **Ẩn danh trước, extract sau** — Nếu nguồn là quy chế/chính sách từ nơi từng làm, áp dụng Quy Tắc Ẩn Danh (AGENTS.md) TRƯỚC bước 4
 
 ## Xử Lý Lỗi
 
@@ -245,3 +250,4 @@ Log kết quả index.
 | Trùng nội dung với bài có sẵn | Merge vào bài cũ, không tạo bài mới |
 | Bài wiki > 120 dòng sau update | Xem xét tách sub-topic thành bài con |
 | `_absorb_log.json` bị hỏng | Rebuild từ `_index.md` Raw Sources table |
+| Nguồn chứa thông tin định danh chưa ẩn danh | DỪNG, hỏi người dùng trước khi ghi vào wiki |

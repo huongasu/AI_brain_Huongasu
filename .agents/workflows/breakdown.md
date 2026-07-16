@@ -24,7 +24,7 @@ Workflow này scan toàn bộ wiki để phát hiện entities (thực thể) đ
 2. Đọc `wiki/_backlinks.json` — xem entity nào được link nhiều nhưng chưa có trang
 3. Kiểm tra:
    - **Backlink targets không có trang**: Entry trong `_backlinks.json` trỏ đến tên bài không tồn tại
-   - **Thư mục trống**: Subdirectory trong `wiki/` chưa có bài nào (VD: `comparisons/`)
+   - **Thư mục trống**: Subdirectory trong `wiki/` chưa có bài nào (VD: `comparisons/`, `lessons/`)
    - **Bài bloated** (>100 dòng): Có sub-topic nào nên tách ra?
 
 ### Phase 2: Mining — Khai Thác Entities
@@ -37,18 +37,19 @@ Workflow này scan toàn bộ wiki để phát hiện entities (thực thể) đ
 Hỏi: **"X là một ___"** — nếu trả lời được bằng 1 danh từ cụ thể, X là entity tiềm năng.
 
 **KHAI THÁC (tạo bài):**
-- Tên người (nhà nghiên cứu, developer, CEO) xuất hiện ≥2 bài
-- Tên công cụ/sản phẩm (software, framework, service) xuất hiện ≥2 bài
-- Tên công ty/tổ chức
-- Tên sự kiện hoặc bước ngoặt có ngày tháng cụ thể
-- Sách, paper, video đáng chú ý được nhắc ≥2 lần
-- **Concept patterns** — ý tưởng/mẫu hình xuất hiện xuyên suốt nhiều bài
+- **Framework/mô hình nhân sự** (VD: mô hình ASK, 9-Box Grid, Balanced Scorecard) xuất hiện ≥2 bài → `frameworks/`
+- **Tình huống/case triển khai cụ thể** (đã ẩn danh nếu nguồn là nơi từng làm — xem AGENTS.md → Quy Tắc Ẩn Danh) được nhắc ≥2 bài → `casestudy/`
+- **Bài học/kinh nghiệm** lặp lại xuyên suốt nhiều bối cảnh, không gắn 1 tình huống cụ thể → `lessons/`
+- Tên sự kiện hoặc bước ngoặt có ngày tháng cụ thể → `casestudy/` (nếu gắn 1 tình huống) hoặc `concepts/` (nếu là mốc chung của ngành)
+- Sách, paper, khóa học đáng chú ý được nhắc ≥2 lần → `concepts/` (nếu là ý tưởng) hoặc `frameworks/` (nếu đề xuất một mô hình cụ thể)
+- **Concept patterns** — ý tưởng/mẫu hình xuất hiện xuyên suốt nhiều bài → `concepts/`
 
 **KHÔNG KHAI THÁC:**
-- Công nghệ generic (Python, JavaScript, Docker) — trừ khi có arc riêng trong wiki
+- Thuật ngữ nhân sự phổ biến (KPI, JD, OKR, PMS) dùng như từ vựng chung — trừ khi có phân tích riêng đủ sâu về thuật ngữ đó
 - Entity đã có trang
 - Nhắc thoáng qua 1 lần duy nhất
 - Thuật ngữ đã có trong `_glossary.md`
+- Tên công ty/cá nhân cụ thể chưa được ẩn danh — DỪNG, áp dụng Quy Tắc Ẩn Danh trước khi coi là ứng cử viên
 
 ### Phase 3: Ranking — Xếp Hạng Ứng Cử Viên
 
@@ -57,8 +58,8 @@ Tổng hợp thành bảng:
 ```markdown
 | Entity | Loại | Lần nhắc | Bài nhắc đến | Category đề xuất |
 |--------|------|----------|-------------|-----------------|
-| ByteRover | paper | 2 | llm-knowledge-bases, rag | concepts/ |
-| Cursor | tool | 2 | lex-fridman, vibe-coding | tools/ |
+| Mô hình ASK | framework | 3 | khung-nang-luc, danh-gia-nang-luc | frameworks/ |
+| Triển khai KPI tại DN 200 người (đã ẩn danh) | case study | 2 | thiet-ke-thang-luong, kpi-bonus | casestudy/ |
 ```
 
 **Tiêu chí chọn:**
@@ -94,14 +95,15 @@ Cho mỗi bài được approve:
 
 1. **Grep tất cả wiki** tìm mọi mention của entity đó
 2. **Thu thập chất liệu** từ các bài hiện có + raw/ nếu cần
-3. **Viết bài** theo chuẩn AGENTS.md:
+3. **Nếu là `casestudy/` từ nguồn nơi từng làm:** xác nhận đã áp dụng Quy Tắc Ẩn Danh (AGENTS.md) trước khi viết
+4. **Viết bài** theo chuẩn AGENTS.md (Entity-Type Template tương ứng: Concept, Framework, Case Study, Lessons, Comparison):
    - Frontmatter đầy đủ (title, aliases, tags, related, summary)
-   - Tối thiểu 200 từ cho concepts
+   - Tối thiểu 200 từ cho concepts/frameworks
    - Giọng văn Bách Khoa Toàn Thư
    - ≥2 wikilinks đến bài khác
-4. **Thêm wikilinks ngược** — các bài hiện có nhắc đến entity → thêm `[[link]]`
-5. **Cập nhật `_index.md`** — thêm entry mới
-6. **Cập nhật `_glossary.md`** nếu entity là thuật ngữ mới
+5. **Thêm wikilinks ngược** — các bài hiện có nhắc đến entity → thêm `[[link]]`
+6. **Cập nhật `_index.md`** — thêm entry mới
+7. **Cập nhật `_glossary.md`** nếu entity là thuật ngữ mới
 
 ### Phase 6: Rebuild
 
@@ -131,9 +133,10 @@ Cho mỗi bài được approve:
 
 - **KHÔNG tạo bài mà không hỏi** — Phase 4 luôn chờ approval
 - **The Golden Rule:** Bài wiki không phải Wikipedia về entity. Bài viết về **vai trò của entity trong hệ thống kiến thức** này.
-  - Bài về một cuốn sách ≠ book review. Mà là: cuốn sách đó ảnh hưởng gì, ai nhắc, trong bối cảnh nào.
+  - Bài về một framework ≠ mô tả lý thuyết suông. Mà là: framework đó áp dụng thế nào trong công việc thực tế, hiệu quả ra sao, ai từng dùng, trong bối cảnh nào.
 - **Anti-Thinning:** Không tạo stub vô nghĩa. ≥3 câu meaningful hoặc không tạo.
 - **Re-read hiện có** trước khi thêm wikilinks vào bài cũ
+- **Ẩn danh trước khi công nhận là ứng cử viên** — nếu entity gắn với công ty/cá nhân cụ thể từ nơi từng làm, xử lý theo Quy Tắc Ẩn Danh trước khi đưa vào bảng xếp hạng Phase 3
 
 ## Xử Lý Lỗi
 
@@ -142,3 +145,4 @@ Cho mỗi bài được approve:
 | Không tìm thấy ứng cử viên nào | Báo "Wiki đã phủ tốt. Cần nạp raw mới để mở rộng." |
 | Entity xuất hiện nhưng chưa đủ chất liệu | Ghi nhận, đề xuất `/ingest` thêm nguồn |
 | Không chắc entity thuộc category nào | Hỏi người dùng |
+| Entity gắn với công ty/cá nhân cụ thể chưa ẩn danh | DỪNG, hỏi người dùng cách ẩn danh trước khi tạo bài |
